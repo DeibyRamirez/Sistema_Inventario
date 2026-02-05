@@ -1,7 +1,8 @@
 import { Response, Request } from "express";
-import { ProductoSevice } from "../services/producto.service";
+import { ProveedorSevice } from "src/services/proveedor.service";
 
-export const getProductos = async (req: Request, res: Response) => {
+
+export const getProveedores = async (req: Request, res: Response) => {
 
     const negocio_id = 1
     try {
@@ -13,12 +14,12 @@ export const getProductos = async (req: Request, res: Response) => {
         // }
 
         // const { negocio_id } = req.user; 
-        const productos = await ProductoSevice.listaProductos(negocio_id);
+        const productos = await ProveedorSevice.listaProveedores(negocio_id);
         
         res.status(200).json(productos);
 
     } catch (error) {
         console.error("DETALLE DEL ERROR:", error); // <-- ESTO TE DIRÁ LA VERDAD
-        res.status(500).json({ message: "Error al obtener productos", error: String(error) });
+        res.status(500).json({ message: "Error al obtener proveedores", error: String(error) });
     }
 };

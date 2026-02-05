@@ -13,6 +13,15 @@ export const UsuarioRepositorio = {
         return result.rows as IUsuario[]; // Casteo seguro
     },
 
+    // Listar Usuarios del Negocio
+    findAllNegocio: async (negocio_id: number): Promise<IUsuario[]> => {
+        const sql = `
+            SELECT id_usuario, negocio_id, nombre, email, rol, activo, created_at FROM usuarios WHERE negocio_id = $1;
+        `;
+        const result = await query(sql, [negocio_id]);
+        return result.rows as IUsuario[]; // Casteo seguro
+    },
+
     // Crear un Negocio
     create: async (usuarioData: any) => {
         const { negocio_id, nombre, email, password, rol, activo } = usuarioData;

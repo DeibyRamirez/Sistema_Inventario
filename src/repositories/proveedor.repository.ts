@@ -4,11 +4,11 @@ import { IProveedor } from "src/models/proveedor.model";
 export const ProveedorRepositorio = {
 
     // Listar Proveedores
-    findAll: async (): Promise<IProveedor[]> => {
+    findAll: async (negocio_id: number): Promise<IProveedor[]> => {
         const sql = `
-            SELECT * FROM proveedores;
+            SELECT * FROM proveedores WHERE negocio_id = $1;
         `;
-        const result = await query(sql);
+        const result = await query(sql, [negocio_id]);
         return result.rows as IProveedor[]; // Casteo seguro
     },
 
