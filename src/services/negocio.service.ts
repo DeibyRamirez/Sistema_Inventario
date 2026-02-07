@@ -1,4 +1,4 @@
-import { NegocioRepositorio } from "src/repositories/negocio.repository";
+import { NegocioRepositorio } from "../repositories/negocio.repository";
 
 
 export const NegocioSevice = {

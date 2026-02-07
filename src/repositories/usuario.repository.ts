@@ -1,4 +1,4 @@
-import { IUsuario } from "src/models/usuario.model";
+import { IUsuario } from "../models/usuario.model";
 import { query } from "../config/db";
 
 

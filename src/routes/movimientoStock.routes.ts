@@ -1,7 +1,7 @@
 // src/routes/movimientoStock.routes.ts
 
 import { Router } from "express";
-import { getMovimientosStock } from "src/controllers/movimientoStock.controller";
+import { getMovimientosStock } from "../controllers/movimientoStock.controller";
 
 const router = Router();
 

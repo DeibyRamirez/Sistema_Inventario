@@ -1,7 +1,7 @@
 // src/controllers/auditoria.controller.ts
 
 import { Request, Response } from "express";
-import { AuditoriaService } from "src/services/auditoria.service";
+import { AuditoriaService } from "../services/auditoria.service";
 
 export const getAuditoria = async (req: Request, res: Response) => {
   try {

@@ -1,6 +1,6 @@
 // src/repositories/movimientoStock.repository.ts
 
-import { IMovimientoStockCreateDTO } from "src/models/movimientostock.model";
+import { IMovimientoStockCreateDTO } from "../models/movimientoStock.model";
 import { query } from "../config/db";
 
 export const MovimientoStockRepository = {

@@ -1,4 +1,4 @@
-import { ProveedorRepositorio } from "src/repositories/proveedor.repository";
+import { ProveedorRepositorio } from "../repositories/proveedor.repository";
 
 
 export const ProveedorSevice = {

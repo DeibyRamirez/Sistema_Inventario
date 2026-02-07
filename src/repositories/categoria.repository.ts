@@ -1,5 +1,5 @@
 import { query } from "../config/db";
-import { ICategoria } from "src/models/categoria.model";
+import { ICategoria } from "../models/categoria.model";
 
 export const CategoriaRepositorio = {
 

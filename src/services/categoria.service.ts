@@ -1,4 +1,4 @@
-import { CategoriaRepositorio } from "src/repositories/categoria.repository";
+import { CategoriaRepositorio } from "../repositories/categoria.repository";
 
 
 export const CategoriaSevice = {

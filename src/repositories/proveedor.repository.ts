@@ -1,5 +1,5 @@
 import { query } from "../config/db";
-import { IProveedor } from "src/models/proveedor.model";
+import { IProveedor } from "../models/proveedor.model";
 
 export const ProveedorRepositorio = {
 

@@ -1,7 +1,7 @@
 // src/repositories/auditoria.repository.ts
 
 import { query } from "../config/db";
-import { IAuditoriaCreateDTO } from "src/models/auditoria.model";
+import { IAuditoriaCreateDTO } from "../models/auditoria.model";
 
 export const AuditoriaRepository = {
 

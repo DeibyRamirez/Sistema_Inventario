@@ -1,4 +1,4 @@
-import { VentaRepositorio } from "src/repositories/venta.repository";
+import { VentaRepositorio } from "../repositories/venta.repository";
 
 
 export const VentaSevice = {

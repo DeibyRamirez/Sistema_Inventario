@@ -1,6 +1,4 @@
-import { Detalle_ventaRepositorio } from "src/repositories/detalle_venta.repository";
-import { NegocioRepositorio } from "src/repositories/negocio.repository";
-
+import { Detalle_ventaRepositorio } from "../repositories/detalle_venta.repository";
 
 export const DetallesVentaSevice = {
     

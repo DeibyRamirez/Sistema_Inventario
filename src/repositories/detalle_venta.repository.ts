@@ -1,5 +1,5 @@
 import { query } from "../config/db";
-import { IDetalle_venta } from "src/models/detalle_venta.model";
+import { IDetalle_venta } from "../models/detalle_venta.model";
 
 export const Detalle_ventaRepositorio = {
 

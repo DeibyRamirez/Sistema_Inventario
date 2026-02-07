@@ -1,7 +1,7 @@
 // src/services/movimientoStock.service.ts
 
-import { IMovimientoStockCreateDTO } from "src/models/movimientostock.model";
-import { MovimientoStockRepository } from "src/repositories/movimientoStock.repository";
+import { IMovimientoStockCreateDTO } from "../models/movimientoStock.model";
+import { MovimientoStockRepository } from "../repositories/movimientoStock.repository";
 
 export const MovimientoStockService = {
 

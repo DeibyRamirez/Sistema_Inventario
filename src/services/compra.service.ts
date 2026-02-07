@@ -1,4 +1,4 @@
-import { CompraRepositorio } from "src/repositories/compra.repository";
+import { CompraRepositorio } from "../repositories/compra.repository";
 
 
 export const CompraSevice = {

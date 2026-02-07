@@ -1,4 +1,4 @@
-import { INegocio } from "src/models/negocio.model";
+import { INegocio } from "../models/negocio.model";
 import { query } from "../config/db";
 
 export const NegocioRepositorio = {

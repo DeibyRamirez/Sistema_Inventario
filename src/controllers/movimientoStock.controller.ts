@@ -1,7 +1,5 @@
-// src/controllers/movimientoStock.controller.ts
-
 import { Request, Response } from "express";
-import { MovimientoStockService } from "src/services/movimientoStock.service";
+import { MovimientoStockService } from "../services/movimientoStock.service";
 
 export const getMovimientosStock = async (req: Request, res: Response) => {
   try {

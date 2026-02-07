@@ -1,12 +1,10 @@
 // src/routes/auditoria.routes.ts
-
 import { Router } from "express";
-import { getAuditoria } from "src/controllers/auditoria.controller";
-// import { verifyToken } from "../middlewares/auth.middleware";
+import { getAuditoria } from "../controllers/auditoria.controller";
 
 const router = Router();
 
 // Solo lectura (admin)
-router.get("/auditoria", getAuditoria);
+router.get("/", getAuditoria);
 
 export default router;

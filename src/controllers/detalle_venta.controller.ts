@@ -1,12 +1,11 @@
 import { Response, Request } from "express";
-import { DetallesVentaSevice } from "src/services/detalle_venta.service";
-import { NegocioSevice } from "src/services/negocio.service";
+import { DetallesVentaSevice } from "../services/detalle_venta.service";
 
 export const getDetallesVenta = async (req: Request, res: Response) => {
 
     try {
         // Log para ver si el usuario llega bien
-        console.log("Usuario en la petición:", req.user);
+        // console.log("Usuario en la petición:", req.user);
 
         // if (!req.user) {
         //     return res.status(401).json({ message: "No hay usuario autenticado" });

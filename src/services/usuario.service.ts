@@ -1,4 +1,4 @@
-import { UsuarioRepositorio } from "src/repositories/usuario.repository";
+import { UsuarioRepositorio } from "../repositories/usuario.repository";
 
 
 export const UsuarioSevice = {
