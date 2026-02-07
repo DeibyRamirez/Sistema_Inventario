@@ -52,7 +52,7 @@ export const NegocioRepositorio = {
 
     // Eliminar o desactivar el Negocio
     delete: async (id_negocio: number) => {
-        const sql = `UPDATE negocio SET activo = false WHERE id_negocio = $1`;
+        const sql = `UPDATE negocios SET activo = false WHERE id_negocio = $1`;
         return await query(sql, [id_negocio]);
     }
 };

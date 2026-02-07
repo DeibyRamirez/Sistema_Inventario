@@ -7,8 +7,6 @@ export interface IProveedor {
     contacto?: string;
     nit_proveedor?: string;
     activo: boolean; // Para el Soft Delete que hablamos
-    created_at?: Date;
-    updated_at?: Date;
 }
 
 // También puedes definir interfaces para las peticiones (Body)

@@ -1,8 +1,9 @@
 import { Response, Request } from "express";
-import { NegocioSevice } from "src/services/negocio.service";
+import { CompraSevice } from "src/services/compra.service";
 
-export const getNegocios = async (req: Request, res: Response) => {
+export const getCompras = async (req: Request, res: Response) => {
 
+    const negocio_id = 1
     try {
         // Log para ver si el usuario llega bien
         console.log("Usuario en la petición:", req.user);
@@ -12,12 +13,12 @@ export const getNegocios = async (req: Request, res: Response) => {
         // }
 
         // const { negocio_id } = req.user; 
-        const negocios = await NegocioSevice.listaNegocios();
+        const compras = await CompraSevice.listacompras();
         
-        res.status(200).json(negocios);
+        res.status(200).json(compras);
 
     } catch (error) {
         console.error("DETALLE DEL ERROR:", error); // <-- ESTO TE DIRÁ LA VERDAD
-        res.status(500).json({ message: "Error al obtener negocios", error: String(error) });
+        res.status(500).json({ message: "Error al obtener compras", error: String(error) });
     }
 };

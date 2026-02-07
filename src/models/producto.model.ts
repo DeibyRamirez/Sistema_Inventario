@@ -12,7 +12,6 @@ export interface IProducto {
     stock_actual: number;
     stock_minimo: number;
     activo: boolean; // Para el Soft Delete que hablamos
-    created_at?: Date;
     updated_at?: Date;
 }
 

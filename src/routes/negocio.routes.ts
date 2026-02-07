@@ -5,8 +5,8 @@ import { getNegocios } from 'src/controllers/negocio.controller';
 
 const router = Router();
 
-// GET /api/products -> Solo usuarios logueados (puedes quitar el comentario de verifyToken cuando tengas el login)
-router.get('/', getNegocios); 
+// GET /api/negocios -> Solo usuarios logueados (puedes quitar el comentario de verifyToken cuando tengas el login)
+router.get('/negocio', getNegocios); 
 
 // Exportamos el objeto router por defecto
 export default router;

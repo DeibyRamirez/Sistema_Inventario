@@ -9,7 +9,6 @@ export interface IUsuario {
     rol: string;
     activo: boolean; // Para el Soft Delete que hablamos
     created_at?: Date;
-    updated_at?: Date;
 }
 
 // También puedes definir interfaces para las peticiones (Body)

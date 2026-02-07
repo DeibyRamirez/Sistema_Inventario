@@ -6,7 +6,7 @@ export const ProveedorRepositorio = {
     // Listar Proveedores
     findAll: async (negocio_id: number): Promise<IProveedor[]> => {
         const sql = `
-            SELECT * FROM proveedores WHERE negocio_id = $1;
+            SELECT * FROM proveedores WHERE negocio_id = $1 AND activo = true;
         `;
         const result = await query(sql, [negocio_id]);
         return result.rows as IProveedor[]; // Casteo seguro
