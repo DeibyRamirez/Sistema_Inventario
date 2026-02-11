@@ -9,11 +9,3 @@ export interface IMovimientoStock {
   cantidad: number;
   fecha: Date;
 }
-
-export interface IMovimientoStockCreateDTO {
-  negocio_id: number;
-  producto_id: number;
-  tipo: "entrada" | "salida";
-  motivo: string;
-  cantidad: number;
-}

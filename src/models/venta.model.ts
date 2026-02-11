@@ -10,9 +10,14 @@ export interface IVenta {
     fecha: Date;
 }
 
-// También puedes definir interfaces para las peticiones (Body)
 export interface IVentaDTO {
     negocio_id: number;
-    total: number;
-    fecha: Date;
+    usuario_id: number;
+    tipo_pago?: string;
+    descuento?: number;
+    productos: {
+        producto_id: number;
+        cantidad: number;
+        precio_unitario: number;
+    }[];
 }

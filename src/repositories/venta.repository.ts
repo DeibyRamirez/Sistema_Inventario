@@ -1,5 +1,8 @@
-import { query } from "../config/db";
+import { Client } from "pg";
+import { pool, query } from "../config/db";
 import { IVenta } from "../models/venta.model";
+
+
 
 export const VentaRepositorio = {
 
@@ -13,46 +16,111 @@ export const VentaRepositorio = {
     },
 
     // Crear una Venta
-    create: async (ventaData: any) => {
-        const { negocio_id, usuario_id, total, descuento, tipo_pago, fecha } = ventaData;
-        const sql = `
-        INSERT INTO ventas (negocio_id, usuario_id, total, descuento, tipo_pago, fecha)
-        VALUES ($1, $2, $3, $4, $5, $6)
-        RETURNING *;
-        `;
-        const values = [negocio_id, usuario_id, total, descuento, tipo_pago, fecha];
-        const result = await query(sql, values);
-        return result.rows[0];
-    },
+    create: async (data: any) => {
+        const client = await pool.connect();
 
-    // Editar un Venta
-    update: async (id_venta: number, fields: Partial<IVenta>) => {
-        const keys = Object.keys(fields);
-        if (keys.length === 0) return null; // No hay nada que actualizar
+        try {
+            await client.query("BEGIN");
 
-        // Construimos la parte "SET nombre=$1, email=$2..."
-        const setClause = keys
-            .map((key, index) => `${key} = $${index + 1}`)
-            .join(", ");
+            const {
+                negocio_id,
+                usuario_id,
+                tipo_pago,
+                descuento,
+                productos
+            } = data;
 
-        // Los valores para los $1, $2...
-        const values = Object.values(fields);
+            // Calcular total
 
-        // Añadimos el ID al final para el WHERE
-        const sql = `
-                UPDATE ventas 
-                SET ${setClause}, updated_at = CURRENT_TIMESTAMP 
-                WHERE id_venta = $${values.length + 1} 
-                RETURNING *;
-            `;
+            const total = productos.reduce(
+                (acc: number, p: any) => acc + p.cantidad * p.precio_unitario,
+                0
+            );
 
-        const result = await query(sql, [...values, id_venta]);
-        return result.rows[0];
-    },
+            // Insertar venta
+            const ventaResultado = await client.query(
+                `
+                INSERT INTO ventas (negocio_id, usuario_id, total, descuento, tipo_pago)
+                VALUES ($1, $2, $3, $4, $5)
+                RETURNING id_venta;
+                `,
+                [negocio_id, usuario_id, total, descuento, tipo_pago]
 
-    // Eliminar o desactivar la Venta
-    delete: async (id_venta: number) => {
-        const sql = `UPDATE ventas SET activo = false WHERE id_venta = $1`;
-        return await query(sql, [id_venta]);
+            );
+
+            const id_venta = ventaResultado.rows[0].id_venta;
+
+            // Procesar cada producto
+            for (const producto of productos) {
+                const { producto_id, cantidad, precio_unitario } = producto;
+
+                // Bloqueo y validación de stock
+                const stockResult = await client.query(
+                    `
+                SELECT stock_actual
+                FROM productos
+                WHERE id_producto = $1
+                FOR UPDATE
+                `,
+                    [producto_id]
+                );
+
+                if (stockResult.rows[0].stock_actual < cantidad) {
+                    throw new Error(`Stock insuficiente para producto ${producto_id}`);
+                }
+
+                // Insertar detalle
+                await client.query(
+                    `
+                INSERT INTO detalles_venta
+                (venta_id, producto_id, cantidad, precio_unitario_momento)
+                VALUES ($1, $2, $3, $4);`,
+
+                    [id_venta, producto_id, cantidad, precio_unitario]
+                );
+
+                // Actualizar stock
+                await client.query(
+                    `
+                UPDATE productos
+                SET stock_actual = stock_actual - $1
+                WHERE id_producto = $2;`,
+
+                    [cantidad, producto_id]
+                );
+
+                // Movimiento de stock
+                await client.query(
+                    `
+                INSERT INTO movimientos_stock
+                (negocio_id, producto_id, tipo, motivo, cantidad)
+                VALUES ($1, $2, 'salida', 'venta', $3);
+                `,
+                    [negocio_id, producto_id, cantidad]
+                );
+
+            }
+
+            // Auditoria
+            await client.query(
+                `
+                INSERT INTO auditoria
+                (negocio_id, usuario_id, accion, metodo_http)
+                VALUES ($1, $2, $3, 'POST');
+                `,
+                [negocio_id, usuario_id, `Venta registrada ID ${id_venta}`]
+            );
+
+            await client.query("COMMIT");
+
+            return { message: "Venta registrada correctamente", id_venta };
+
+        } catch (error) {
+            await client.query("ROLLBACK");
+            throw error;
+        } finally {
+            client.release();
+
+        }
     }
 };
