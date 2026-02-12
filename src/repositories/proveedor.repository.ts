@@ -4,7 +4,16 @@ import { IProveedor } from "../models/proveedor.model";
 export const ProveedorRepositorio = {
 
     // Listar Proveedores
-    findAll: async (negocio_id: number): Promise<IProveedor[]> => {
+    findAll: async (): Promise<IProveedor[]> => {
+        const sql = `
+            SELECT * FROM proveedores;
+        `;
+        const result = await query(sql);
+        return result.rows as IProveedor[]; // Casteo seguro
+    },
+
+    // Listar Proveedores
+    findAllfiltrado: async (negocio_id: number): Promise<IProveedor[]> => {
         const sql = `
             SELECT * FROM proveedores WHERE negocio_id = $1 AND activo = true;
         `;
@@ -20,7 +29,7 @@ export const ProveedorRepositorio = {
         VALUES ($1, $2, $3, $4, $5)
         RETURNING *;
         `;
-        const values = [negocio_id, nombre, contacto, nit_proveedor, activo];
+        const values = [negocio_id, nombre, contacto, nit_proveedor, true];
         const result = await query(sql, values);
         return result.rows[0];
     },
@@ -41,7 +50,7 @@ export const ProveedorRepositorio = {
         // Añadimos el ID al final para el WHERE
         const sql = `
             UPDATE proveedores 
-            SET ${setClause}, updated_at = CURRENT_TIMESTAMP 
+            SET ${setClause}
             WHERE id_proveedor = $${values.length + 1} 
             RETURNING *;
         `;
