@@ -7,6 +7,10 @@ export const NegocioSevice = {
     return await NegocioRepositorio.findAll();
   },
 
+  listaUnicoNegocio: async (id_negocio: number) => {
+    return await NegocioRepositorio.soloUno(id_negocio);
+  },
+
   crearNegocios: async (data: any) => {
     return await NegocioRepositorio.create(data);
   },
