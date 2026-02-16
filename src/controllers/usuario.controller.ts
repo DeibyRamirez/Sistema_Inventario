@@ -15,6 +15,20 @@ export const getUsuarios = async (req: Request, res: Response) => {
     }
 };
 
+export const getUsuariosNegocio = async (req: Request, res: Response) => {
+    const { negocio_id } = req.params;
+
+    try {
+        const productos = await UsuarioSevice.listaUsuariosNegocio(Number(negocio_id));
+
+        res.status(200).json(productos);
+
+    } catch (error) {
+        console.error("DETALLE DEL ERROR:", error); // <-- ESTO TE DIRÁ LA VERDAD
+        res.status(500).json({ message: "Error al obtener usuarios", error: String(error) });
+    }
+};
+
 export const postUsuarios = async (req: Request, res: Response) => {
 
 

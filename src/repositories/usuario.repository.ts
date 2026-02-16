@@ -7,7 +7,7 @@ export const UsuarioRepositorio = {
     // Listar Usuarios
     findAll: async (): Promise<IUsuario[]> => {
         const sql = `
-            SELECT id_usuario, negocio_id, nombre, email, rol, activo, created_at FROM usuarios;
+            SELECT * FROM usuarios;
         `;
         const result = await query(sql);
         return result.rows as IUsuario[]; // Casteo seguro
@@ -16,7 +16,7 @@ export const UsuarioRepositorio = {
     // Listar Usuarios del Negocio
     findAllNegocio: async (negocio_id: number): Promise<IUsuario[]> => {
         const sql = `
-            SELECT id_usuario, negocio_id, nombre, email, rol, activo, created_at FROM usuarios WHERE negocio_id = $1;
+            SELECT id_usuario, negocio_id, nombre, email, rol, activo FROM usuarios WHERE negocio_id = $1;
         `;
         const result = await query(sql, [negocio_id]);
         return result.rows as IUsuario[]; // Casteo seguro
@@ -30,7 +30,7 @@ export const UsuarioRepositorio = {
         VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING *;
         `;
-        const values = [negocio_id, nombre, email, password, rol, activo];
+        const values = [negocio_id, nombre, email, password, rol, true]; // Por defecto activo al crear
         const result = await query(sql, values);
         return result.rows[0];
     },
@@ -51,7 +51,7 @@ export const UsuarioRepositorio = {
         // Añadimos el ID al final para el WHERE
         const sql = `
         UPDATE usuarios 
-        SET ${setClause}, updated_at = CURRENT_TIMESTAMP 
+        SET ${setClause}
         WHERE id_usuario = $${values.length + 1} 
         RETURNING *;
     `;
