@@ -22,8 +22,8 @@ export const postCategorias = async (req: Request, res: Response) => {
 
     
     try {
-        const data = req.params;
-        const categorias = await CategoriaSevice.crearCategorias(data);
+        const body = req.body;
+        const categorias = await CategoriaSevice.crearCategorias(body);
         
         res.status(200).json(categorias);
 

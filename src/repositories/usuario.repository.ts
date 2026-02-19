@@ -25,18 +25,28 @@ export const UsuarioRepositorio = {
 
     // Crear un Negocio
     create: async (usuarioData: any) => {
-        const { negocio_id, nombre, email, password, rol, activo } = usuarioData;
+        const { negocio_id, nombre, email, password, rol } = usuarioData;
 
         // 🔐 Encriptar contraseña
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+
+        // 1. Manejo de la contraseña (Solo si existe)
+        // Si es un cliente, password vendrá undefined, así que guardamos null
+        let hashedPassword = null;
+        if (password) {
+            const salt = await bcrypt.genSalt(10);
+            hashedPassword = await bcrypt.hash(password, salt);
+        }
+
+        // 2. Manejo de campos opcionales
+        // Usamos null explícito si el campo no viene, para que SQL lo acepte
+        const finalEmail = email || null;
 
         const sql = `
         INSERT INTO usuarios (negocio_id, nombre, email, password, rol, activo)
         VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING *;
         `;
-        const values = [negocio_id, nombre, email, hashedPassword, rol, true]; // Por defecto activo al crear
+        const values = [negocio_id, nombre, finalEmail, hashedPassword, rol, true]; // Por defecto activo al crear
         const result = await query(sql, values);
         return result.rows[0];
     },

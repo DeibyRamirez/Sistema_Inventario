@@ -6,7 +6,7 @@ export interface IUsuario {
     nombre: string;
     email?: string;
     password?: string;
-    rol: "admin" | "empleado" | "cliente";
+    rol: "admin" | "dueño" | "empleado" | "cliente";
     activo: boolean; // Para el Soft Delete que hablamos
     created_at?: Date;
 }

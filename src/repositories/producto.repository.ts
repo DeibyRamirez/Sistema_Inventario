@@ -28,13 +28,13 @@ export const ProductoRepositorio = {
 
     // Crear un producto
     create: async (productData: any) => {
-        const { negocio_id, categoria_id, nombre, precio_venta, stock_actual } = productData;
+        const { negocio_id, categoria_id, nombre, precio_venta } = productData;
         const sql = `
         INSERT INTO productos (negocio_id, categoria_id, nombre, precio_venta, stock_actual, activo)
         VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING *;
         `;
-        const values = [negocio_id, categoria_id, nombre, precio_venta, stock_actual, true]; // Por defecto activo al crear
+        const values = [negocio_id, categoria_id, nombre, precio_venta, 0, true]; // Por defecto activo al crear
         const result = await query(sql, values);
         return result.rows[0];
     },

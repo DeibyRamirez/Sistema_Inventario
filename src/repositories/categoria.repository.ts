@@ -23,13 +23,13 @@ export const CategoriaRepositorio = {
 
     // Crear un Categoria
     create: async (categoriaData: any) => {
-        const { negocio_id, nombre, descripcion, activo } = categoriaData;
+        const { negocio_id, nombre, descripcion } = categoriaData;
         const sql = `
         INSERT INTO categorias (negocio_id, nombre, descripcion, activo)
         VALUES ($1, $2, $3, $4)
         RETURNING *;
         `;
-        const values = [negocio_id, nombre, descripcion, activo];
+        const values = [negocio_id, nombre, descripcion, true];
         const result = await query(sql, values);
         return result.rows[0];
     },
