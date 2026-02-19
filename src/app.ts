@@ -12,6 +12,7 @@ import categoriasRoutes from './routes/categoria.routes';
 import detallesRoutes from './routes/detalle_venta.routes';
 import movimientosRoutes from './routes/movimientoStock.routes';
 import auditoriaRoutes from './routes/auditoria.routes';
+import authRoutes from './routes/auth.routes';
 
 dotenv.config();
 
@@ -29,6 +30,9 @@ app.use('/api/categorias', categoriasRoutes);
 app.use('/api/detalles', detallesRoutes);
 app.use('/api/movimientos', movimientosRoutes);
 app.use('/api/auditoria', auditoriaRoutes);
+
+app.use('/api/auth', authRoutes);
+
 
 
 const PORT = process.env.PORT || 3000;

@@ -26,10 +26,14 @@ export const postCompras = async (req: Request, res: Response) => {
 
         const body: ICompraDTO = req.body;
 
-        // 🔥 TEMPORAL hasta que implementes JWT
-        const usuario_id = 1;
+        // 🔐 Usuario viene del token
+        const usuario_id = req.user?.id_usuario;
 
-        const compra = await CompraSevice.crearcompras({...body}, usuario_id);
+        if (!usuario_id) {
+            return res.status(401).json({ message: "Usuario no autenticado" });
+        }
+
+        const compra = await CompraSevice.crearcompras(body, usuario_id);
 
         res.status(201).json(compra);
 

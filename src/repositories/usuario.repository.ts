@@ -1,5 +1,6 @@
 import { IUsuario } from "../models/usuario.model";
 import { query } from "../config/db";
+import bcrypt from "bcrypt";
 
 
 export const UsuarioRepositorio = {
@@ -25,12 +26,17 @@ export const UsuarioRepositorio = {
     // Crear un Negocio
     create: async (usuarioData: any) => {
         const { negocio_id, nombre, email, password, rol, activo } = usuarioData;
+
+        // 🔐 Encriptar contraseña
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
         const sql = `
         INSERT INTO usuarios (negocio_id, nombre, email, password, rol, activo)
         VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING *;
         `;
-        const values = [negocio_id, nombre, email, password, rol, true]; // Por defecto activo al crear
+        const values = [negocio_id, nombre, email, hashedPassword, rol, true]; // Por defecto activo al crear
         const result = await query(sql, values);
         return result.rows[0];
     },

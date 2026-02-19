@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { verify } from 'jsonwebtoken';
+import { verificarToken } from '../utils/jwt';
 
 // Define qué datos esperas que vengan en el Token
 interface UserPayload {
@@ -12,23 +12,27 @@ declare global {
     namespace Express {
         interface Request {
             // En lugar de any, usa tu interface
-            user?: UserPayload; 
+            user?: UserPayload;
         }
     }
 }
 
 export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers['authorization']?.split(' ')[1];
 
-    if (!token) return res.status(403).json({ message: "El token no fue proporcionado"});
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+        return res.status(401).json({ message: "Token no proporcionado" });
+    }
+
+    const token = authHeader.split(' ')[1]; // Extrae el token del formato "Bearer
 
     try {
-        const decoded = verify(token, process.env.JWT_SECRET as string) as any;
-        
-        // Inyectamos la info del usuario y su negocio en la petición
-        req.user = decoded;
+        const decoded = verificarToken(token) as UserPayload; // Verifica el token y castea al tipo esperado
+        req.user = decoded; // Almacena la información del usuario en la solicitud
+
         next();
     } catch (error) {
-        return res.status(401).json({message: "Token invalido"});
+        return res.status(401).json({ message: "Token invalido" });
     }
 };
