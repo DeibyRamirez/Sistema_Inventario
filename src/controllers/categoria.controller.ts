@@ -5,8 +5,10 @@ export const getCategorias = async (req: Request, res: Response) => {
 
     
     try {
+
+        const { id_negocio } = req.params;
         
-        const categorias = await CategoriaSevice.listaCategorias();
+        const categorias = await CategoriaSevice.listaCategoriasNegocio(Number(id_negocio));
         
         res.status(200).json(categorias);
 

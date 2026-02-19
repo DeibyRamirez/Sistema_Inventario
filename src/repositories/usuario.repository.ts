@@ -16,7 +16,7 @@ export const UsuarioRepositorio = {
     // Listar Usuarios del Negocio
     findAllNegocio: async (negocio_id: number): Promise<IUsuario[]> => {
         const sql = `
-            SELECT id_usuario, negocio_id, nombre, email, rol, activo FROM usuarios WHERE negocio_id = $1;
+            SELECT * FROM usuarios WHERE negocio_id = $1;
         `;
         const result = await query(sql, [negocio_id]);
         return result.rows as IUsuario[]; // Casteo seguro

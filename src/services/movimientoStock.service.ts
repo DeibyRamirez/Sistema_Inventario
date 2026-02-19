@@ -5,13 +5,13 @@ import { MovimientoStockRepository } from "../repositories/movimientoStock.repos
 
 export const MovimientoStockService = {
 
-  registrarMovimiento: async (data: IMovimientoStock) => {
-    if (data.cantidad <= 0) {
-      throw new Error("La cantidad debe ser mayor a cero");
-    }
+  // registrarMovimiento: async (data: IMovimientoStock) => {
+  //   if (data.cantidad <= 0) {
+  //     throw new Error("La cantidad debe ser mayor a cero");
+  //   }
 
-    await MovimientoStockRepository.registrar(data);
-  },
+  //   await MovimientoStockRepository.registrar(data);
+  // },
 
   listarPorProducto: async (producto_id: number) => {
     return await MovimientoStockRepository.listarPorProducto(producto_id);
