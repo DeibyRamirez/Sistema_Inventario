@@ -1,4 +1,3 @@
-import { Client } from "pg";
 import { pool, query } from "../config/db";
 import { IVenta } from "../models/venta.model";
 
@@ -7,11 +6,11 @@ import { IVenta } from "../models/venta.model";
 export const VentaRepositorio = {
 
     // Listar Ventas
-    findAll: async (): Promise<IVenta[]> => {
+    findAll: async (negocio_id: number): Promise<IVenta[]> => {
         const sql = `
-            SELECT * FROM ventas;
+            SELECT * FROM ventas WHERE negocio_id = $1;
         `;
-        const result = await query(sql);
+        const result = await query(sql, [negocio_id]);
         return result.rows as IVenta[]; // Casteo seguro
     },
 

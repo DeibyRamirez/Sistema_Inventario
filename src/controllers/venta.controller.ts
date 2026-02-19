@@ -4,17 +4,12 @@ import { IVentaDTO } from "src/models/venta.model";
 
 export const getVentas = async (req: Request, res: Response) => {
 
-    const negocio_id = 1
+    
     try {
-        // Log para ver si el usuario llega bien
-        // console.log("Usuario en la petición:", req.user);
 
-        // if (!req.user) {
-        //     return res.status(401).json({ message: "No hay usuario autenticado" });
-        // }
-
-        // const { negocio_id } = req.user; 
-        const ventas = await VentaSevice.listaVentas();
+        const { negocio_id } = req.params;
+        
+        const ventas = await VentaSevice.listaVentas(Number(negocio_id));
 
         res.status(200).json(ventas);
 

@@ -3,8 +3,8 @@ import { VentaRepositorio } from "../repositories/venta.repository";
 
 export const VentaSevice = {
     
-    listaVentas: async () => {
-        return await VentaRepositorio.findAll();
+    listaVentas: async (negocio_id: number) => {
+        return await VentaRepositorio.findAll(negocio_id);
     },
 
     crearVentas: async (body: any) => {
