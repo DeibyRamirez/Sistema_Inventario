@@ -48,7 +48,7 @@ export const ProductoRepositorio = {
     },
 
     // Editar un Producto
-    update: async (id_producto: number, fields: Partial<IProducto>) => {
+    update: async (id_producto: number, fields: Partial<IProducto>, negocio_id: number) => {
             const keys = Object.keys(fields);
             if (keys.length === 0) return null; // No hay nada que actualizar
     
@@ -64,17 +64,17 @@ export const ProductoRepositorio = {
             const sql = `
             UPDATE productos 
             SET ${setClause}
-            WHERE id_producto = $${values.length + 1} 
+            WHERE id_producto = $${values.length + 1} AND negocio_id = $${values.length + 2}
             RETURNING *;
         `;
     
-            const result = await query(sql, [...values, id_producto]);
+            const result = await query(sql, [...values, id_producto, negocio_id]);
             return result.rows[0];
         },
 
     // En tu ProductRepository.ts
-    delete: async (id_producto: number) => {
-        const sql = `UPDATE productos SET activo = false WHERE id_producto = $1`;
-        return await query(sql, [id_producto]);
+    delete: async (id_producto: number, negocio_id: number) => {
+        const sql = `UPDATE productos SET activo = false WHERE id_producto = $1 AND negocio_id = $2`;
+        return await query(sql, [id_producto, negocio_id]);
     }
 };

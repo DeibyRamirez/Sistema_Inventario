@@ -1,216 +1,264 @@
 # 🚀 Sistema de Inventario y Ventas (Backend)
 
-Bienvenido al núcleo del **Sistema de Gestión Comercial** diseñado para pequeños y medianos negocios.  
-Este backend está construido con **Node.js**, **TypeScript** y **PostgreSQL**, siguiendo buenas prácticas de ingeniería de software, enfocado en **escalabilidad, seguridad e integridad de datos**.
+Backend del **Sistema de Gestión Comercial Multi-Negocio (SaaS)** diseñado para pequeños y medianos comercios que necesitan control profesional de inventario, ventas y auditoría.
+
+Desarrollado con **Node.js + TypeScript + PostgreSQL**, aplicando arquitectura limpia, separación de responsabilidades y principios de seguridad empresarial.
 
 ---
 
 ## 🎯 Objetivo del Proyecto
 
-Resolver la problemática de negocios que no cuentan con un sistema formal para:
+Brindar una solución tecnológica que permita a los negocios:
 
-- Gestión de inventario
-- Registro de ventas y compras
-- Control de stock
-- Auditoría de acciones
-- Reportes históricos
+- 📦 Gestionar inventario
+- 🛒 Registrar ventas y compras
+- 📊 Controlar stock en tiempo real
+- 🔍 Auditar acciones del sistema
+- 📈 Generar reportes históricos
+- 🏢 Operar múltiples negocios desde una misma plataforma (Multi-Tenant)
 
-El sistema está diseñado como **multi-negocio (multi-tenant)**, permitiendo que múltiples comercios usen la misma plataforma de forma segura.
+> El sistema está preparado para evolucionar a un modelo SaaS comercial escalable.
 
 ---
 
-## 🏗️ Arquitectura del Proyecto
+## 🏗️ Arquitectura del Sistema
 
-Se implementó una **Arquitectura en Capas**, separando responsabilidades para facilitar mantenimiento, pruebas y escalabilidad.
+Se implementa una **Arquitectura en Capas (Layered Architecture)** para garantizar:
 
-```text
+- Separación de responsabilidades
+- Escalabilidad
+- Código mantenible
+- Fácil testeo
+- Seguridad estructural
+
+```
 /src
- ├── app.ts                # Punto de entrada de la aplicación
- ├── config/               # Configuración de DB y variables de entorno
- ├── controllers/          # Manejo de peticiones HTTP (Request / Response)
- ├── services/             # Lógica de negocio y validaciones
- ├── repositories/         # Acceso a datos (SQL puro y transacciones)
- ├── models/               # Interfaces y contratos de datos (TypeScript)
+ ├── app.ts                # Punto de entrada
+ ├── config/               # Configuración DB y entorno
+ ├── controllers/          # Manejo HTTP (Request / Response)
+ ├── services/             # Lógica de negocio
+ ├── repositories/         # Acceso a datos (SQL puro)
+ ├── models/               # Interfaces y contratos
  ├── routes/               # Definición de endpoints
- ├── middlewares/          # Middlewares (auditoría, seguridad, JWT)
+ ├── middlewares/          # Seguridad, JWT, auditoría
  ├── utils/                # Funciones auxiliares
- └── types/                # Extensiones de tipos (Express Request)
+ └── types/                # Extensiones de Express
+```
 
 ---
 
+## 🛠️ Stack Tecnológico
 
+| Tecnología | Uso |
+|---|---|
+| Node.js 18+ | Runtime |
+| TypeScript | Tipado estático y seguridad |
+| Express | Framework HTTP |
+| PostgreSQL 16+ | Base de datos relacional |
+| SQL Puro | Control total de consultas |
+| JWT | Autenticación |
+| dotenv | Variables de entorno |
+| Nodemon | Desarrollo |
 
-🛠️ Tecnologías Utilizadas
-Runtime: Node.js 18+
+---
 
-Lenguaje: TypeScript
+## 🔐 Seguridad Implementada
 
-Framework: Express
+### 1️⃣ Autenticación – JWT
 
-Base de Datos: PostgreSQL 16+
+Se utiliza **JSON Web Tokens** para validar identidad.
 
-ORM: ❌ No se usa (SQL puro para mayor control)
+1. El usuario inicia sesión
+2. Se genera un token con:
+   - `id_usuario`
+   - `negocio_id`
+   - `rol`
+   - `permisos`
+3. El token se envía en cada request protegido
 
-Autenticación: JSON Web Tokens (JWT) (en proceso)
+```
+Authorization: Bearer <token>
+```
 
-Herramientas: Nodemon, ts-node, dotenv
+### 2️⃣ Autorización – Roles + Permisos Granulares
 
-💡 Decisiones de Ingeniería
-1️⃣ Arquitectura Modular
-Cada capa cumple una única responsabilidad:
+Se implementa control de acceso basado en:
 
-Controllers: Reciben y responden peticiones HTTP
+- **Rol** (`admin`, `dueño`, `empleado`)
+- **Permisos específicos** (ej: `productos.editar`)
 
-Services: Contienen la lógica de negocio
+**Middleware:**
 
-Repositories: Ejecutan consultas SQL y transacciones
+```ts
+authorizePermissions("productos.editar")
+```
 
-Models: Definen contratos de datos
+Esto permite control fino sobre qué puede hacer cada usuario.
 
-Esto permite:
+### 3️⃣ Multi-Tenant Seguro
 
-Código limpio
+Cada tabla crítica incluye `negocio_id`. Todas las consultas están filtradas por:
 
-Pruebas más simples
-
-Fácil escalabilidad
-
-2️⃣ Soft Delete (Eliminación Lógica)
-Para preservar el historial y evitar corrupción de métricas:
-
-No se utilizan DELETE físicos
-
-Se implementa una columna activo (BOOLEAN)
-
-Las eliminaciones son UPDATE activo = false
+```sql
+WHERE negocio_id = $1
+```
 
 Esto garantiza:
 
-Integridad histórica
+- Aislamiento total de datos
+- Seguridad entre negocios
+- Arquitectura SaaS real
 
-Reportes confiables
+### 4️⃣ Auditoría Automática
 
-Auditoría completa
+Middleware que registra automáticamente en cada acción crítica:
 
-3️⃣ Multi-negocio (Multi-tenant)
-El sistema está diseñado para múltiples negocios:
+- Usuario
+- Acción
+- Método HTTP
+- IP
+- Fecha y hora
 
-Cada tabla clave contiene negocio_id
+> No tiene CRUD manual. Se registra automáticamente.
 
-Todas las consultas están filtradas por negocio
+**Beneficios:** Trazabilidad · Seguridad empresarial · Prevención de fraude interno
 
-Un negocio nunca puede acceder a datos de otro
+---
 
-Esto permite escalar el sistema como SaaS.
+## 📦 Gestión de Inventario
 
-4️⃣ Auditoría Automática
-Se implementó un sistema de auditoría que registra:
+### ✔ Movimientos de Stock
 
-Usuario
+El stock **no se modifica directamente**. Toda entrada o salida genera un registro en `movimientos_stock`. Las ventas y compras se ejecutan dentro de **transacciones SQL** para evitar inconsistencias.
 
-Acción realizada
+**Beneficios:** Integridad de datos · Historial completo · Reportes confiables
 
-Método HTTP
+### 🗑️ Soft Delete (Eliminación Lógica)
 
-IP de origen
+No se realizan `DELETE` físicos. Se utiliza un campo `activo BOOLEAN`:
 
-Fecha y hora
+```sql
+UPDATE tabla SET activo = false
+```
 
-La auditoría:
+**Ventajas:** Conservación histórica · Auditoría completa · Métricas correctas
 
-No tiene CRUD
+---
 
-Se registra automáticamente mediante middleware
+## 🧠 Decisiones de Ingeniería
 
-Garantiza trazabilidad y seguridad
+### ❌ No se usa ORM
 
-## 5️⃣ Control de Stock
-El stock no se modifica directamente:
+Se usa **SQL puro** porque:
 
-Toda entrada o salida genera un registro en movimientos_stock
+- Mayor control
+- Mejor rendimiento
+- Consultas optimizadas
+- Transacciones claras
 
-Las ventas y compras actualizan stock dentro de transacciones
+### 📂 Manejo de Importaciones
 
-Evita inconsistencias y errores humanos
+Se utilizan rutas relativas:
 
-📦 Manejo de Importaciones
-En este proyecto se utilizan rutas relativas (../) para las importaciones internas.
-
-❓ ¿Por qué no usamos src/...?
-Node.js no reconoce rutas absolutas como src/... por defecto.
-Al ejecutar el proyecto, Node interpreta estas rutas como paquetes dentro de node_modules, lo que provoca errores de resolución.
-
-✅ Solución adoptada
-Se optó por rutas relativas porque:
-
-Son entendidas nativamente por Node.js
-
-No requieren configuración adicional
-
-Funcionan en desarrollo y producción sin problemas
-
-Ejemplo correcto:
-
+```ts
 import { getUsuarios } from '../controllers/usuario.controller';
-En el futuro, podrían configurarse alias (src/...) usando tsconfig-paths, pero se priorizó estabilidad y simplicidad.
+```
 
-🚦 Primeros Pasos
-Requisitos
-Node.js 18+
+**Motivo:** Node.js no reconoce `src/...` por defecto, evita configuraciones adicionales y funciona igual en desarrollo y producción.
 
-PostgreSQL 16+
+---
 
-Instalación
-Clona el repositorio
+## 🚦 Instalación y Uso
 
-Instala dependencias:
+### Requisitos
 
+- Node.js 18+
+- PostgreSQL 16+
+
+### Instalación
+
+```bash
 npm install
-Crea y configura el archivo .env:
+```
 
+### Crear archivo `.env`
+
+```env
 PORT=3000
 DB_HOST=localhost
 DB_PORT=5432
 DB_USER=postgres
 DB_PASSWORD=tu_password
 DB_NAME=sistema_inventario
-Ejecuta el servidor en desarrollo:
+JWT_SECRET=clave_super_segura
+```
 
+### Ejecutar en desarrollo
+
+```bash
 npm run dev
-✅ Estado del Proyecto
- Arquitectura base
-
- CRUD principales
-
- Auditoría automática
-
- Movimientos de stock
-
- Soft delete
-
- Autenticación JWT
-
- Control de roles avanzado
-
- Reportes avanzados
-
- Despliegue en producción
-
-🧠 Nota Final
-Este backend fue diseñado con criterios de software profesional, priorizando:
-
-Integridad de datos
-
-Seguridad
-
-Escalabilidad
-
-Buenas prácticas
-
-Es un proyecto con potencial real de uso comercial y crecimiento como plataforma SaaS.
-
-👨‍💻 Autor: Deiby
-🎓 Ingeniería de Software y Computación
-
+```
 
 ---
+
+## 📊 Estado del Proyecto
+
+| Estado | Funcionalidad |
+|---|---|
+| ✅ | Arquitectura base |
+| ✅ | CRUD principales |
+| ✅ | Soft delete |
+| ✅ | Multi-tenant |
+| ✅ | Auditoría automática |
+| ✅ | Control de stock transaccional |
+| ✅ | Autenticación JWT |
+| 🔄 | Control de roles avanzado |
+| 🔄 | Reportes avanzados |
+| 🔄 | Deploy en producción |
+
+---
+
+## 🔎 Conceptos Clave
+
+| Concepto | Significado |
+|---|---|
+| Autenticación | Verifica quién eres |
+| Autorización | Verifica qué puedes hacer |
+| Multi-Tenant | Un sistema para múltiples negocios aislados |
+| Soft Delete | Eliminación lógica |
+| Transacciones | Operaciones atómicas en base de datos |
+
+---
+
+## 🚀 Escalabilidad Futura
+
+El sistema está preparado para:
+
+- Panel administrativo global
+- Suscripciones SaaS
+- Facturación electrónica
+- Integración con apps móviles
+- Microservicios
+- Dockerización
+
+---
+
+## 🧩 Filosofía del Proyecto
+
+Este backend fue diseñado priorizando:
+
+- 🔐 Seguridad
+- 📊 Integridad de datos
+- 🧱 Arquitectura limpia
+- 🚀 Escalabilidad comercial
+- 🧠 Buenas prácticas profesionales
+
+> No es solo un CRUD.  
+> Es una base sólida para un producto real de mercado.
+
+---
+
+## 👨‍💻 Autor
+
+**Deiby**  
+Ingeniero de Software y Computación

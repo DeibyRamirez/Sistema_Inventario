@@ -35,7 +35,8 @@ export const login = async (req: Request, res: Response) => {
         const token = generarToken({
             id_usuario: usuario.id_usuario,
             negocio_id: usuario.negocio_id,
-            rol: usuario.rol
+            rol: usuario.rol,
+            permisos: usuario.permisos || [] // Include granular permissions
         });
         
 

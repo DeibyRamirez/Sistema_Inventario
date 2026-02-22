@@ -10,12 +10,12 @@ export const ProductoSevice = {
         return await ProductoRepositorio.create(body);
     },
 
-    editarProductos: async (id_producto: number, body: any) => {
-        return await ProductoRepositorio.update(id_producto, body);
+    editarProductos: async (id_producto: number, body: any, negocio_id: number) => {
+        return await ProductoRepositorio.update(id_producto, body, negocio_id);
     },
 
-    eliminarProductos: async (id_producto: number) => {
-        return await ProductoRepositorio.delete(id_producto);
+    eliminarProductos: async (id_producto: number, negocio_id: number) => {
+        return await ProductoRepositorio.delete(id_producto, negocio_id);
     },
 
 }

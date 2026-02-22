@@ -2,10 +2,11 @@ import { Request, Response, NextFunction } from "express";
 import { verificarToken } from '../utils/jwt';
 
 // Define qué datos esperas que vengan en el Token
-interface UserPayload {
+export interface UserPayload {
     id_usuario: number;
     negocio_id: number;
     rol: string;
+    permisos?: string[]; // Array de permisos granulares ej: ['ventas.crear', 'productos.leer']
 }
 
 declare global {
@@ -30,6 +31,9 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
     try {
         const decoded = verificarToken(token) as UserPayload; // Verifica el token y castea al tipo esperado
         req.user = decoded; // Almacena la información del usuario en la solicitud
+
+        console.log("DECODED TOKEN:", decoded);
+        
 
         next();
     } catch (error) {

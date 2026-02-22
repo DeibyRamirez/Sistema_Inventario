@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import { query } from './config/db';
+import { setupSwagger } from './config/swagger'; // Import Swagger setup
 
 import productosRoutes from './routes/producto.routes';
 import usuariosRoutes from './routes/usuario.routes';
@@ -18,6 +19,9 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
+
+// Setup Swagger
+setupSwagger(app);
 
 // Ahora sí, usamos el nombre que importamos arriba
 app.use('/api/productos', productosRoutes);
